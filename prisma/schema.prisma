@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  rooms         Room[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Song {
+  id                String   @id @default(cuid())
+  spotifyId         String   @unique
+  title             String
+  artist            String
+  album             String?
+  durationMs        Int
+  spotifyUri        String
+  spotifyPreviewUrl String?
+  popularity        Int      @default(0)
+  releaseYear       Int      // From MusicBrainz for accuracy
+  genre             String[]
+  country           String?  // e.g., "CL", "AR", "ES", "US"
+  isVerified        Boolean  @default(false) // If release year is verified from MusicBrainz
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([genre])
+  @@index([country])
+  @@index([popularity])
+  @@index([releaseYear])
+}
+
+model Room {
+  id                String   @id @default(cuid())
+  name              String
+  pin               String   @unique
+  hostId            String
+  host              User     @relation(fields: [hostId], references: [id])
+  status            RoomStatus @default(WAITING)
+  genreFilter       String[] @default([])
+  countryFilter     String?  @default(null)
+  maxRounds         Int      @default(10)
+  targetScore       Int?     // Alternative win condition: first to reach this score
+  currentRound      Int      @default(0)
+  songFilterType    SongFilterType @default(POPULAR)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  players           Player[]
+  roundResults      RoundResult[]
+
+  @@index([pin])
+  @@index([status])
+}
+
+model Player {
+  id          String   @id @default(cuid())
+  roomId      String
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  name        String
+  deviceId    String   // Fingerprint for mobile device identification
+  score       Int      @default(0)
+  streak      Int      @default(0) // Consecutive correct answers
+  isHost      Boolean  @default(false)
+  joinedAt    DateTime @default(now())
+  roundResults RoundResult[]
+
+  @@unique([roomId, deviceId])
+  @@index([roomId])
+}
+
+model RoundResult {
+  id          String   @id @default(cuid())
+  roomId      String
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  playerId    String
+  player      Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  songId      String
+  roundNumber Int
+  placedPosition Int?  // Position in player's timeline (0-indexed)
+  correctPosition Int? // Actual correct position
+  isCorrect   Boolean  @default(false)
+  points      Int      @default(0)
+  speedBonus  Int      @default(0)
+  streakMultiplier Float @default(1.0)
+  responseTimeMs Int   // Time taken to respond
+  submittedAt DateTime @default(now())
+
+  @@index([roomId])
+  @@index([playerId])
+  @@index([roundNumber])
+}
+
+enum RoomStatus {
+  WAITING     // Waiting for players to join
+  ACTIVE      // Game in progress
+  COMPLETED   // Game finished
+}
+
+enum SongFilterType {
+  POPULAR     // Only high popularity songs
+  ALL         // All songs in database
+  CUSTOM      // Custom playlist (future)
+}
