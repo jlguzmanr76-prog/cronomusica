@@ -84,7 +84,7 @@ model Room {
   host              User     @relation(fields: [hostId], references: [id])
   status            RoomStatus @default(WAITING)
   genreFilter       String[] @default([])
-  countryFilter     String?  @default(null)
+  countryFilter     String?
   maxRounds         Int      @default(10)
   targetScore       Int?     // Alternative win condition: first to reach this score
   currentRound      Int      @default(0)
