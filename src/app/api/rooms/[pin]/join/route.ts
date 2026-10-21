@@ -4,10 +4,10 @@ import { pusherServer } from "@/lib/pusher";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { pin: string } }
+  { params }: { params: Promise<{ pin: string }> }
 ) {
   try {
-    const { pin } = params;
+    const { pin } = await params;
     const body = await request.json();
     const { playerName, deviceId } = body;
 

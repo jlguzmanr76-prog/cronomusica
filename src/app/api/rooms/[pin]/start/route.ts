@@ -7,10 +7,10 @@ import { RoomStatus } from "@prisma/client";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { pin: string } }
+  { params }: { params: Promise<{ pin: string }> }
 ) {
   try {
-    const { pin } = params;
+    const { pin } = await params;
 
     // Check if user is authenticated (host)
     const session = await getServerSession(authOptions);
