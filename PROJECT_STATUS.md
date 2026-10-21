@@ -90,39 +90,56 @@ cronomusica/
 
 ---
 
-## 🚧 Fase 2: Configuración de Servicios Externos (EN PROGRESO)
+## ✅ Fase 2: Configuración de Servicios Externos (COMPLETADA)
 
 ### Cuenta configurada: jlguzmanr76@gmail.com
 
-#### 2.1 Neon PostgreSQL - PENDIENTE
-- [ ] Crear cuenta en https://neon.tech con jlguzmanr76@gmail.com
-- [ ] Crear proyecto: `cronomusica`
-- [ ] Obtener connection string (DATABASE_URL)
-- [ ] Configurar en .env.local
+#### 2.1 Neon PostgreSQL - ✅ COMPLETADO
+- [x] Crear cuenta en https://neon.tech con jlguzmanr76@gmail.com
+- [x] Crear proyecto: `cronomusica`
+- [x] Obtener connection string (DATABASE_URL)
+- [x] Configurar en .env.local
+- **Connection String**: `postgresql://neondb_owner:npg_dJ7RgMBCGH5v@ep-holy-boat-b7mty21n-pooler.c-13.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require`
 
-#### 2.2 Spotify Developer - PENDIENTE
-- [ ] Crear cuenta en https://developer.spotify.com/dashboard
-- [ ] Crear nueva app: "CronoMusica"
-- [ ] Configurar Redirect URIs:
-  - http://localhost:3000/api/auth/callback/spotify
-  - https://tu-dominio.vercel.app/api/auth/callback/spotify
-- [ ] Obtener Client ID y Client Secret
-- [ ] Configurar en .env.local
+#### 2.2 Spotify Developer - ✅ COMPLETADO
+- [x] Crear cuenta en https://developer.spotify.com/dashboard
+- [x] Crear nueva app: "CronoMusica"
+- [x] Configurar Redirect URIs:
+  - https://cronomusica.vercel.app/api/auth/callback/spotify
+- [x] Obtener Client ID y Client Secret
+- [x] Configurar en .env.local y Vercel
+- **Client ID**: `a870fe0f80f34a59bff16495e97a9e11`
+- **Client Secret**: `d21fee663db04065919b421d7105e749`
 
-#### 2.3 Pusher Channels - PENDIENTE
-- [ ] Crear cuenta en https://pusher.com/channels
-- [ ] Crear nueva app: "CronoMusica"
-- [ ] Obtener App ID, Key, Secret, Cluster
-- [ ] Configurar en .env.local
+#### 2.3 Pusher Channels - ✅ COMPLETADO
+- [x] Crear cuenta en https://pusher.com/channels
+- [x] Crear nueva app: "CronoMusica"
+- [x] Obtener App ID, Key, Secret, Cluster
+- [x] Configurar en .env.local y Vercel
+- **App ID**: `2203913`
+- **Key**: `7f27652b7d658dc4d45e`
+- **Secret**: `d3c61060e8b738acdde1`
+- **Cluster**: `us2`
 
-#### 2.4 Variables de Entorno - PENDIENTE
-- [ ] Crear `.env.local` con todas las credenciales
-- [ ] Verificar formato de connection string de Neon
-- [ ] Generar NEXTAUTH_SECRET con: `openssl rand -base64 32`
+#### 2.4 Variables de Entorno - ✅ COMPLETADO
+- [x] Crear `.env.local` con todas las credenciales
+- [x] Generar NEXTAUTH_SECRET: `/d4689nfzQpUnsKXit8l2m9TCwuwzUEcRlZXcjeuaYo=`
+- [x] Configurar todas las variables en Vercel
+- [x] NEXTAUTH_URL actualizado a: `https://cronomusica.vercel.app`
+
+#### 2.5 GitHub y Vercel - ✅ COMPLETADO
+- [x] Crear cuenta GitHub: jlguzmanr76-prog
+- [x] Subir código a GitHub: https://github.com/jlguzmanr76-prog/cronomusica
+- [x] Crear proyecto en Vercel
+- [x] Conectar repo de GitHub a Vercel
+- [x] Deploy exitoso: https://cronomusica.vercel.app
+- [x] Corregir errores de build (Prisma, TypeScript, Pusher)
+- [x] Downgrade Prisma de v8 a v5 (versión estable)
+- [x] Temporalmente deshabilitar Prisma adapter (usando JWT por ahora)
 
 ---
 
-## 📝 Fase 3: Migraciones y Testing (Pendiente)
+## 📝 Fase 3: Migraciones y Testing (EN PROGRESO)
 
 ### 3.1 Base de Datos
 - [ ] Ejecutar: `npx prisma migrate dev --name init`
@@ -132,6 +149,11 @@ cronomusica/
 ### 3.2 Testing de Conexión
 - [ ] Crear script de prueba para verificar conexión a Neon
 - [ ] Verificar Prisma Client funciona correctamente
+
+### 3.3 Re-habilitar Prisma Adapter
+- [ ] Re-habilitar PrismaAdapter en auth.ts
+- [ ] Re-deploy a Vercel
+- [ ] Verificar que el build siga funcionando
 
 ---
 
