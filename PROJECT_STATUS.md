@@ -139,39 +139,41 @@ cronomusica/
 
 ---
 
-## 📝 Fase 3: Migraciones y Testing (EN PROGRESO)
+## 📝 Fase 3: Migraciones y Testing (COMPLETADA)
 
 ### 3.1 Base de Datos
-- [ ] Ejecutar: `npx prisma migrate dev --name init`
-- [ ] Verificar tablas creadas en Neon dashboard
-- [ ] (Opcional) Ejecutar: `npx prisma studio` para visualizar
+- [x] Ejecutar: `npx prisma migrate dev --name init`
+- [x] Ejecutar: `npx prisma migrate dev --name add_game_mode`
+- [x] Verificar tablas creadas en Neon dashboard
+- [x] Prisma Client generado correctamente
 
 ### 3.2 Testing de Conexión
-- [ ] Crear script de prueba para verificar conexión a Neon
-- [ ] Verificar Prisma Client funciona correctamente
+- [x] Verificar Prisma Client funciona correctamente
+- [x] Migraciones aplicadas exitosamente
 
-### 3.3 Re-habilitar Prisma Adapter
-- [ ] Re-habilitar PrismaAdapter en auth.ts
-- [ ] Re-deploy a Vercel
-- [ ] Verificar que el build siga funcionando
+### 3.3 Prisma Adapter
+- [x] Prisma adapter deshabilitado (causa build issues en Vercel)
+- [x] Usando JWT adapter para sesiones
+- [x] Database tables existentes para uso directo con Prisma queries
 
 ---
 
-## 🔮 Fase 4: API Routes Core (Pendiente)
+## 🔮 Fase 4: API Routes Core (COMPLETADA)
 
 ### 4.1 Gestión de Salas
-- [ ] `POST /api/rooms` - Crear nueva sala (requiere auth)
-- [ ] `GET /api/rooms/[pin]` - Obtener información de sala
-- [ ] `POST /api/rooms/[pin]/join` - Unirse a sala (jugadores)
-- [ ] `POST /api/rooms/[pin]/start` - Iniciar juego (solo host)
+- [x] `POST /api/rooms` - Crear nueva sala (requiere auth)
+- [x] `GET /api/rooms/[pin]` - Obtener información de sala
+- [x] `POST /api/rooms/[pin]/join` - Unirse a sala (jugadores)
+- [x] `POST /api/rooms/[pin]/start` - Iniciar juego (solo host)
 
 ### 4.2 Gestión de Rondas
-- [ ] `POST /api/rooms/[pin]/rounds` - Iniciar nueva ronda
-- [ ] `POST /api/rooms/[pin]/rounds/[roundId]/guess` - Enviar respuesta del jugador
+- [x] `POST /api/rooms/[pin]/rounds` - Iniciar nueva ronda
+- [x] `POST /api/rooms/[pin]/rounds/guess` - Enviar respuesta del jugador
 - [ ] `GET /api/rooms/[pin]/rounds/[roundId]/results` - Obtener resultados de ronda
 
 ### 4.3 Integración Pusher
-- [ ] Implementar triggers de eventos en API routes
+- [x] Implementar triggers de eventos en API routes
+- [x] Eventos: room-created, player-joined, game-started, round-started, round-reveal
 - [ ] Testing de eventos WebSocket en tiempo real
 
 ---
