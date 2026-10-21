@@ -1,7 +1,5 @@
 import { NextAuthOptions } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/lib/prisma";
 
 const scopes = [
   "user-read-email",
@@ -59,7 +57,9 @@ async function refreshAccessToken(token: any) {
 }
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
+  // Using JWT for now - Prisma adapter causes build issues in Vercel
+  // Database tables exist in Neon for future use with direct Prisma queries
+  // adapter: PrismaAdapter(prisma) as any,
   providers: [
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID!,
