@@ -1,24 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 
-const scopes = [
-  "user-read-email",
-  "user-read-private",
-  "user-library-read",
-  "user-read-playback-state",
-  "user-modify-playback-state",
-  "user-read-currently-playing",
-  "app-remote-control",
-  "streaming",
-].join(" ");
-
-const params = {
-  scope: scopes,
-  redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/spotify`,
-};
-
-const LOGIN_URL = "https://accounts.spotify.com/authorize?" + new URLSearchParams(params).toString();
-
 async function refreshAccessToken(token: any) {
   try {
     const url =
@@ -65,7 +47,20 @@ export const authOptions: NextAuthOptions = {
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID!,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
-      authorization: LOGIN_URL,
+      authorization: {
+        params: {
+          scope: [
+            "user-read-email",
+            "user-read-private",
+            "user-library-read",
+            "user-read-playback-state",
+            "user-modify-playback-state",
+            "user-read-currently-playing",
+            "app-remote-control",
+            "streaming",
+          ].join(" "),
+        },
+      },
     }),
   ],
   callbacks: {
