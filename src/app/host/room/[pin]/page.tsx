@@ -28,13 +28,21 @@ interface RoomData {
 }
 
 export default function HostRoomPage() {
-  const { pin } = useParams();
   const router = useRouter();
   const { data: session } = useSession();
   const [room, setRoom] = useState<RoomData | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
+  const [pin, setPin] = useState<string>("");
+
+  useEffect(() => {
+    const pathParts = window.location.pathname.split("/");
+    const pinParam = pathParts[pathParts.length - 1];
+    if (pinParam) {
+      setPin(pinParam);
+    }
+  }, []);
 
   useEffect(() => {
     if (!pin) return;
