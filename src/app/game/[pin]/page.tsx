@@ -21,7 +21,6 @@ interface PlayerData {
 }
 
 export default function PlayerGamePage() {
-  const { pin } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [roomStatus, setRoomStatus] = useState<"WAITING" | "ACTIVE" | "COMPLETED">("WAITING");
@@ -34,10 +33,19 @@ export default function PlayerGamePage() {
   const [leaderboard, setLeaderboard] = useState<PlayerData[]>([]);
   const [gameMode, setGameMode] = useState<"TIMELINE" | "TIMELINE_NO_TIME">("TIMELINE");
   const [timeBonusEnabled, setTimeBonusEnabled] = useState(true);
+  const [pin, setPin] = useState<string>("");
 
   // Load player info from localStorage
   const playerId = typeof window !== "undefined" ? localStorage.getItem("playerId") : "";
   const playerName = typeof window !== "undefined" ? localStorage.getItem("playerName") : "";
+
+  useEffect(() => {
+    const pathParts = window.location.pathname.split("/");
+    const pinParam = pathParts[pathParts.length - 1];
+    if (pinParam) {
+      setPin(pinParam);
+    }
+  }, []);
 
   useEffect(() => {
     if (!pin || !playerId) {
