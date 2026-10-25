@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Users, Play, Copy, Check, X } from "lucide-react";
+import Pusher from "pusher-js";
 
 interface Player {
   id: string;
@@ -39,10 +40,28 @@ export default function HostRoomPage() {
     if (!pin) return;
 
     fetchRoom();
-    const interval = setInterval(fetchRoom, 3000); // Poll every 3 seconds
 
-    return () => clearInterval(interval);
-  }, [pin]);
+    // Initialize Pusher
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+    });
+
+    const channel = pusher.subscribe(`room-${room?.id || pin}`);
+
+    channel.bind("player-joined", (data: any) => {
+      fetchRoom(); // Refresh room when player joins
+    });
+
+    channel.bind("game-started", (data: any) => {
+      router.push(`/host/game/${pin}`);
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+      pusher.disconnect();
+    };
+  }, [pin, room?.id]);
 
   const fetchRoom = async () => {
     try {

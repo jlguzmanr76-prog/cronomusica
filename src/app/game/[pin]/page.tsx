@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Clock, Send, Trophy, Music, ChevronLeft, ChevronRight } from "lucide-react";
+import Pusher from "pusher-js";
 
 interface TimelineCard {
   songId: string;
@@ -45,9 +46,48 @@ export default function PlayerGamePage() {
     }
 
     fetchRoom();
-    const interval = setInterval(fetchRoom, 2000);
 
-    return () => clearInterval(interval);
+    // Initialize Pusher
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+    });
+
+    const channel = pusher.subscribe(`room-${pin}`);
+
+    channel.bind("round-started", (data: any) => {
+      setCurrentRound(data.roundNumber);
+      setTimeRemaining(data.timeLimit);
+      setSubmitted(false);
+      setResult(null);
+    });
+
+    channel.bind("round-reveal", (data: any) => {
+      setResult(data);
+      setSubmitted(true);
+      // Update timeline with new song
+      if (data.song) {
+        setTimeline((prev) => [
+          ...prev,
+          {
+            songId: data.song.id || "temp",
+            title: data.song.title,
+            artist: data.song.artist,
+            releaseYear: data.song.releaseYear,
+            position: 0,
+          },
+        ]);
+      }
+    });
+
+    channel.bind("game-ended", (data: any) => {
+      setRoomStatus("COMPLETED");
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+      pusher.disconnect();
+    };
   }, [pin, playerId]);
 
   const fetchRoom = async () => {
