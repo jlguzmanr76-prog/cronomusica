@@ -14,6 +14,7 @@ const scopes = [
 
 const params = {
   scope: scopes,
+  redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/spotify`,
 };
 
 const LOGIN_URL = "https://accounts.spotify.com/authorize?" + new URLSearchParams(params).toString();
