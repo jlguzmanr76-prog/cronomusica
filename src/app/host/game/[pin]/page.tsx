@@ -23,8 +23,6 @@ interface RoomData {
 }
 
 export default function HostGamePage() {
-  const params = useParams();
-  const pin = params.pin as string;
   const router = useRouter();
   const { data: session } = useSession();
   const [room, setRoom] = useState<RoomData | null>(null);
@@ -36,16 +34,15 @@ export default function HostGamePage() {
   const [spotifyPlayer, setSpotifyPlayer] = useState<any>(null);
   const [token, setToken] = useState<string>("");
   const playerRef = useRef<any>(null);
+  const [pin, setPin] = useState<string>("");
 
-  if (!pin) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="bg-red-500/20 border border-red-500 text-red-200 px-6 py-4 rounded-lg">
-          Invalid room PIN
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const pathParts = window.location.pathname.split("/");
+    const pinParam = pathParts[pathParts.length - 1];
+    if (pinParam) {
+      setPin(pinParam);
+    }
+  }, []);
 
   useEffect(() => {
     if (!pin) return;
