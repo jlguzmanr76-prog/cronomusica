@@ -48,6 +48,21 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.SPOTIFY_CLIENT_ID!,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
       allowDangerousEmailAccountLinking: true,
+      authorization: {
+        params: {
+          scope: [
+            "user-read-email",
+            "user-read-private",
+            "user-library-read",
+            "user-read-playback-state",
+            "user-modify-playback-state",
+            "user-read-currently-playing",
+            "app-remote-control",
+            "streaming",
+          ].join(" "),
+          redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/spotify`,
+        },
+      },
     }),
   ],
   callbacks: {
