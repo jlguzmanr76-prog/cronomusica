@@ -143,8 +143,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error creating room:", error);
     console.error("Error details:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to create room", details: error instanceof Error ? error.message : "Unknown error" },
+      { error: "Failed to create room", details: errorMessage, fullError: JSON.stringify(error, Object.getOwnPropertyNames(error)) },
       { status: 500 }
     );
   }
