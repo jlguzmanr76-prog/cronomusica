@@ -47,23 +47,9 @@ export const authOptions: NextAuthOptions = {
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID!,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          scope: [
-            "user-read-email",
-            "user-read-private",
-            "user-library-read",
-            "user-read-playback-state",
-            "user-modify-playback-state",
-            "user-read-currently-playing",
-            "app-remote-control",
-            "streaming",
-          ].join(" "),
-        },
-      },
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
-  debug: true, // Enable debug logging to see what redirect_uri is being used
   callbacks: {
     async jwt({ token, user, account }) {
       // Initial sign in
