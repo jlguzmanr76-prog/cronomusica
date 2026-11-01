@@ -63,6 +63,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  debug: true, // Enable debug logging to see what redirect_uri is being used
   callbacks: {
     async jwt({ token, user, account }) {
       // Initial sign in
